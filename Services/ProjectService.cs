@@ -24,5 +24,9 @@ namespace TaskManagementApp.Services {
             _context.Projects.Remove(project);
             _context.SaveChanges();
         }
+         public List<Project> GetAvailableProjects()
+        {
+            return _context.Projects.Where(p => p.IsSelected == false).ToList();
+        }
     }
 }
