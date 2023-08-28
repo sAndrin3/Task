@@ -25,5 +25,16 @@ namespace TaskManagementApp.Services {
             task.TaskStatus = Models.TaskStatus.Pending; // Fully qualify the enum value
             _context.SaveChanges();
         }
+         public void CreateTask(Tasker task)
+        {
+            _context.Tasks.Add(task);
+            _context.SaveChanges();
+        }
+
+         public void UpdateTask(Tasker task)
+        {
+            _context.Tasks.Update(task);
+            _context.SaveChanges();
+        }
     }
 }
