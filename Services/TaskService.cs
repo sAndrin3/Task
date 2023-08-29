@@ -36,5 +36,15 @@ namespace TaskManagementApp.Services {
             _context.Tasks.Update(task);
             _context.SaveChanges();
         }
+
+        public IEnumerable<Tasker> GetAllTasks()
+        {
+            return _context.Tasks.ToList();
+        }
+
+        public  List<Tasker> GetTasksByStatusAndUser(Models.TaskStatus pending, User loggedInUser)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
