@@ -7,17 +7,24 @@ namespace TaskManagementApp.ConsoleApp
 {
     public class AuthenticationController
     {
+          private AdminController _adminController;
+            private UserController _userController;
+          
+        
         private readonly UserService _userService;
         private User _loggedInUser;
+        
 
          public User GetLoggedInUser()
     {
         return _loggedInUser;
     }
 
-        public AuthenticationController(UserService userService)
+        public AuthenticationController(UserService userService, ProjectService projectService, TaskService taskService)
         {
             _userService = userService;
+             _adminController = new AdminController(projectService, taskService, userService); 
+             _userController = new UserController(projectService, taskService, this);
         }
 
         public void Register(string username, string password, UserRole role)
@@ -44,71 +51,85 @@ namespace TaskManagementApp.ConsoleApp
             }
         }
 
-        public void StartSession()
-        {
-            Console.WriteLine("Welcome to the Task Management App!");
+        // Inside the StartSession method
+public void StartSession()
+{
+    Console.WriteLine("Welcome to the Task Management App!");
 
-            if (_loggedInUser == null)
-            {
-                Console.WriteLine("Select an option:");
-                Console.WriteLine("1. Login");
-                Console.WriteLine("2. Register");
+    if (_loggedInUser == null)
+    {
+        Console.WriteLine("Select an option:");
+        Console.WriteLine("1. Login");
+        Console.WriteLine("2. Register");
+        Console.Write("Enter your choice: ");
+        int optionChoice = int.Parse(Console.ReadLine());
+
+        switch (optionChoice)
+        {
+            case 1:
+                Console.Write("Enter username: ");
+                string username = Console.ReadLine();
+                Console.Write("Enter password: ");
+                string password = Console.ReadLine();
+                if (Login(username, password)) // Check if login is successful
+                {
+                    NavigateToDashboard(_loggedInUser.Role); // Redirect to the appropriate dashboard
+                }
+                break;
+            case 2:
+                Console.Write("Enter username: ");
+                string newUsername = Console.ReadLine();
+                Console.Write("Enter password: ");
+                string newPassword = Console.ReadLine();
+                Console.WriteLine("Select role:");
+                Console.WriteLine("1. Admin");
+                Console.WriteLine("2. User");
                 Console.Write("Enter your choice: ");
-                int optionChoice = int.Parse(Console.ReadLine());
-
-                switch (optionChoice)
-                {
-                    case 1:
-                        Console.Write("Enter username: ");
-                        string username = Console.ReadLine();
-                        Console.Write("Enter password: ");
-                        string password = Console.ReadLine();
-                        Login(username, password);
-                        break;
-                    case 2:
-                        Console.Write("Enter username: ");
-                        string newUsername = Console.ReadLine();
-                        Console.Write("Enter password: ");
-                        string newPassword = Console.ReadLine();
-                        Console.WriteLine("Select role:");
-                        Console.WriteLine("1. Admin");
-                        Console.WriteLine("2. User");
-                        Console.Write("Enter your choice: ");
-                        int roleChoice = int.Parse(Console.ReadLine());
-                        UserRole role = roleChoice == 1 ? UserRole.Admin : UserRole.User;
-                        Register(newUsername, newPassword, role);
-                        break;
-                    default:
-                        Console.WriteLine("Invalid choice");
-                        break;
-                }
-            }
-            else
-            {
-                Console.WriteLine("Logged in user: " + _loggedInUser.username + ", Role: " + _loggedInUser.Role);
-                if (_loggedInUser.Role == UserRole.Admin)
-                {
-                    // Redirect to admin dashboard
-                    AdminDashboard();
-                }
-                else
-                {
-                    // Redirect to user dashboard
-                    UserDashboard();
-                }
-            }
+                int roleChoice = int.Parse(Console.ReadLine());
+                UserRole role = roleChoice == 1 ? UserRole.Admin : UserRole.User;
+                Register(newUsername, newPassword, role);
+                break;
+            default:
+                Console.WriteLine("Invalid choice");
+                break;
         }
+    }
+    else
+    {
+        Console.WriteLine("Logged in user: " + _loggedInUser.username + ", Role: " + _loggedInUser.Role);
+        NavigateToDashboard(_loggedInUser.Role); // Redirect to the appropriate dashboard
+    }
+}
 
-        private void AdminDashboard()
+// Add this method to navigate to the dashboard based on the user's role
+public void NavigateToDashboard(UserRole role)
+{
+    if (role == UserRole.Admin)
+    {
+        AdminDashboard();
+    }
+    else
+    {
+        UserDashboard();
+    }
+}
+
+
+        public void AdminDashboard()
         {
-            // Implement admin dashboard actions here
+            
             Console.WriteLine("Welcome to the Admin Dashboard.");
+           _adminController.AdminMenu();
+            
+            
+            
         }
 
-        private void UserDashboard()
+        public void UserDashboard()
         {
-            // Implement user dashboard actions here
+            
             Console.WriteLine("Welcome to the User Dashboard.");
+            _userController.UserMenu();
         }
     }
 }

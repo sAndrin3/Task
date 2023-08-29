@@ -17,7 +17,7 @@ namespace TaskManagementApp.ConsoleApp
             _userService = userService;
         }
 
-        public void AdminDashboard()
+        public void AdminMenu()
         {
             Console.WriteLine("Admin Dashboard");
             Console.WriteLine("1. Create Project");
@@ -41,8 +41,11 @@ namespace TaskManagementApp.ConsoleApp
                     DeleteProject();
                     break;
                 case 4:
-                    CreateTask();
+                    Console.Write("Enter project ID to associate the task with: ");
+                    int projectId = int.Parse(Console.ReadLine());
+                    CreateTask(projectId); // Call the modified CreateTask method
                     break;
+
                 case 5:
                     AssignTask();
                     break;
@@ -107,20 +110,35 @@ namespace TaskManagementApp.ConsoleApp
             }
         }
 
-        public void CreateTask()
+        public void CreateTask(int projectId) // Pass the projectId to associate the task with a project
         {
             Console.Write("Enter task title: ");
             string taskTitle = Console.ReadLine();
 
-            var newTask = new Tasker
-            {
-                title = taskTitle,
-                TaskStatus = TaskManagementApp.Models.TaskStatus.Pending
-            };
+            Console.WriteLine("Enter username of the assigned user: ");
+            string username = Console.ReadLine();
 
-            _taskService.CreateTask(newTask);
-            Console.WriteLine("New task created!");
+            var user = _userService.GetUserByUsername(username);
+            if (user != null)
+            {
+                var newTask = new Tasker
+                {
+                    title = taskTitle,
+                    TaskStatus = TaskManagementApp.Models.TaskStatus.Pending,
+                    Project = _projectService.GetProjectById(projectId), // Associate the task with the project
+                    AssignedUser = user,
+                };
+
+                _taskService.CreateTask(newTask);
+                Console.WriteLine("New task created!");
+            }
+            else {
+                System.Console.WriteLine("User not found");
+            }
         }
+
+
+
 
         public void AssignTask()
         {
