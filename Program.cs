@@ -15,7 +15,9 @@ namespace TaskManagementApp.ConsoleApp
             ProjectService projectService = new ProjectService(context);
             TaskService taskService = new TaskService(context);
             UserService userService = new UserService(context);
-            AuthenticationController authenticationController = new AuthenticationController(userService);
+
+            // Pass all the required services to the AuthenticationController
+            AuthenticationController authenticationController = new AuthenticationController(userService, projectService, taskService);
 
             authenticationController.StartSession();
         }

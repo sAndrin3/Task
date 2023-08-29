@@ -18,7 +18,7 @@ namespace TaskManagementApp.ConsoleApp
             _authenticationController = authenticationController;
         }
 
-        public void UserDashboard()
+        public void UserMenu()
         {
             Console.WriteLine("User Dashboard");
             Console.WriteLine("1. View Available Projects");

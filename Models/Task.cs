@@ -7,9 +7,10 @@ namespace TaskManagementApp.Models {
 
     public class Tasker{
         public int Id { get; set; }
-        public string title { get; set; }
+        public string title { get; set; } 
         public bool IsCompleted { get; set; }
         public TaskStatus TaskStatus { get; set; }
+        public Project Project { get; set; }
 
         public int AssignedUserId { get; set; }
         public User AssignedUser { get; set; }
