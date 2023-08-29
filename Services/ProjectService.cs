@@ -28,5 +28,10 @@ namespace TaskManagementApp.Services {
         {
             return _context.Projects.Where(p => p.IsSelected == false).ToList();
         }
+
+        public IEnumerable<Project> GetAllProjects()
+        {
+            return _context.Projects.ToList();
+        }
     }
 }
