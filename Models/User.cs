@@ -10,6 +10,6 @@ namespace TaskManagementApp.Models {
         public string password { get; set; } = string.Empty;
         public UserRole Role { get; set; }
 
-        public ICollection<Tasker> Tasks { get; set; }
+        public ICollection<Tasker>? Tasks { get; set; }
     }
 }

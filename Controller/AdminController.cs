@@ -9,7 +9,7 @@ namespace TaskManagementApp.ConsoleApp
         private readonly ProjectService _projectService;
         private readonly TaskService _taskService;
         private readonly UserService _userService;
-          private readonly AuthenticationController _authenticationController;
+        private readonly AuthenticationController _authenticationController;
 
 
         public AdminController(ProjectService projectService, TaskService taskService, UserService userService)
@@ -17,7 +17,7 @@ namespace TaskManagementApp.ConsoleApp
             _projectService = projectService;
             _taskService = taskService;
             _userService = userService;
-             _authenticationController  = new AuthenticationController();
+            _authenticationController = new AuthenticationController();
         }
 
         public void AdminMenu()
@@ -86,68 +86,68 @@ namespace TaskManagementApp.ConsoleApp
             Console.WriteLine("New project created!");
         }
 
-     public void UpdateProject()
-{
-    Console.WriteLine("Current Projects:");
-    var projects = _projectService.GetAllProjects();
-    foreach (var proj in projects)
-    {
-        Console.WriteLine($"Project ID: {proj.Id}, Name: {proj.Name}");
-    }
+        public void UpdateProject()
+        {
+            Console.WriteLine("Current Projects:");
+            var projects = _projectService.GetAllProjects();
+            foreach (var proj in projects)
+            {
+                Console.WriteLine($"Project ID: {proj.Id}, Name: {proj.Name}");
+            }
 
-    Console.Write("Enter project ID to update: ");
-    int projectId = int.Parse(Console.ReadLine());
+            Console.Write("Enter project ID to update: ");
+            int projectId = int.Parse(Console.ReadLine());
 
-    var project = _projectService.GetProjectById(projectId);
-    if (project != null)
-    {
-        Console.Write("Enter new project name: ");
-        string newProjectName = Console.ReadLine();
-        project.Name = newProjectName;
+            var project = _projectService.GetProjectById(projectId);
+            if (project != null)
+            {
+                Console.Write("Enter new project name: ");
+                string newProjectName = Console.ReadLine();
+                project.Name = newProjectName;
 
-        _projectService.UpdateProject(project);
-        Console.WriteLine("Project updated!");
-    }
-    else
-    {
-        Console.WriteLine("Project not found.");
-    }
-}
+                _projectService.UpdateProject(project);
+                Console.WriteLine("Project updated!");
+            }
+            else
+            {
+                Console.WriteLine("Project not found.");
+            }
+        }
 
-public void ViewAvailableProjects()
-{
-    Console.WriteLine("Available Projects:");
-    var availableProjects = _projectService.GetAvailableProjects();
-    foreach (var project in availableProjects)
-    {
-        Console.WriteLine($"Project ID: {project.Id}, Name: {project.Name}");
-    }
-}
+        public void ViewAvailableProjects()
+        {
+            Console.WriteLine("Available Projects:");
+            var availableProjects = _projectService.GetAvailableProjects();
+            foreach (var project in availableProjects)
+            {
+                Console.WriteLine($"Project ID: {project.Id}, Name: {project.Name}");
+            }
+        }
 
 
-public void DeleteProject()
-{
-    Console.WriteLine("Current Projects:");
-    var projects = _projectService.GetAllProjects();
-    foreach (var proj in projects)
-    {
-        Console.WriteLine($"Project ID: {proj.Id}, Name: {proj.Name}");
-    }
+        public void DeleteProject()
+        {
+            Console.WriteLine("Current Projects:");
+            var projects = _projectService.GetAllProjects();
+            foreach (var proj in projects)
+            {
+                Console.WriteLine($"Project ID: {proj.Id}, Name: {proj.Name}");
+            }
 
-    Console.Write("Enter project ID to delete: ");
-    int projectId = int.Parse(Console.ReadLine());
+            Console.Write("Enter project ID to delete: ");
+            int projectId = int.Parse(Console.ReadLine());
 
-    var project = _projectService.GetProjectById(projectId);
-    if (project != null)
-    {
-        _projectService.DeleteProject(project);
-        Console.WriteLine("Project deleted!");
-    }
-    else
-    {
-        Console.WriteLine("Project not found.");
-    }
-}
+            var project = _projectService.GetProjectById(projectId);
+            if (project != null)
+            {
+                _projectService.DeleteProject(project);
+                Console.WriteLine("Project deleted!");
+            }
+            else
+            {
+                Console.WriteLine("Project not found.");
+            }
+        }
 
 
 
@@ -173,7 +173,8 @@ public void DeleteProject()
                 _taskService.CreateTask(newTask);
                 Console.WriteLine("New task created!");
             }
-            else {
+            else
+            {
                 System.Console.WriteLine("User not found");
             }
         }
@@ -181,51 +182,51 @@ public void DeleteProject()
 
 
 
-       public void AssignTask()
-{
-    Console.WriteLine("Current Tasks:");
-    var tasks = _taskService.GetAllTasks();
-    foreach (var t in tasks)
-    {
-        Console.WriteLine($"Task ID: {t.Id}, Title: {t.title}, Status: {t.TaskStatus}");
-    }
-
-    Console.Write("Enter task ID to assign: ");
-    int taskId = int.Parse(Console.ReadLine());
-
-    var task = _taskService.GetTaskById(taskId);
-    if (task != null)
-    {
-        Console.Write("Enter username to assign the task: ");
-        string username = Console.ReadLine();
-
-        var user = _userService.GetUserByUsername(username);
-        if (user != null)
+        public void AssignTask()
         {
-            task.AssignedUser = user;
-            _taskService.UpdateTask(task);
-            Console.WriteLine("Task assigned!");
+            Console.WriteLine("Current Tasks:");
+            var tasks = _taskService.GetAllTasks();
+            foreach (var t in tasks)
+            {
+                Console.WriteLine($"Task ID: {t.Id}, Title: {t.title}, Status: {t.TaskStatus}");
+            }
+
+            Console.Write("Enter task ID to assign: ");
+            int taskId = int.Parse(Console.ReadLine());
+
+            var task = _taskService.GetTaskById(taskId);
+            if (task != null)
+            {
+                Console.Write("Enter username to assign the task: ");
+                string username = Console.ReadLine();
+
+                var user = _userService.GetUserByUsername(username);
+                if (user != null)
+                {
+                    task.AssignedUser = user;
+                    _taskService.UpdateTask(task);
+                    Console.WriteLine("Task assigned!");
+                }
+                else
+                {
+                    Console.WriteLine("User not found.");
+                }
+            }
+            else
+            {
+                Console.WriteLine("Task not found.");
+            }
         }
-        else
-        {
-            Console.WriteLine("User not found.");
-        }
-    }
-    else
-    {
-        Console.WriteLine("Task not found.");
-    }
-}
 
 
         public void ViewTaskStatus()
-{
-    Console.WriteLine("Task Status List:");
-    foreach (var task in _taskService.GetAllTasks())
-    {
-        Console.WriteLine($"Task ID: {task.Id}, Title: {task.title}, Status: {task.TaskStatus}");
-    }
-}
+        {
+            Console.WriteLine("Task Status List:");
+            foreach (var task in _taskService.GetAllTasks())
+            {
+                Console.WriteLine($"Task ID: {task.Id}, Title: {task.title}, Status: {task.TaskStatus}");
+            }
+        }
 
     }
 }

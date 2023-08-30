@@ -10,9 +10,9 @@ namespace TaskManagementApp.Models {
         public string title { get; set; } = string.Empty;
         public bool IsCompleted { get; set; }
         public TaskStatus TaskStatus { get; set; }
-        public Project Project { get; set; } 
+        public Project? Project { get; set; } 
 
         public int AssignedUserId { get; set; }
-        public User AssignedUser { get; set; } 
+        public User? AssignedUser { get; set; } 
     }
 }

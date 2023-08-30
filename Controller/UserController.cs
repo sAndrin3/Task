@@ -11,58 +11,59 @@ namespace TaskManagementApp.ConsoleApp
         private readonly TaskService _taskService;
         private readonly AuthenticationController _authenticationController;
 
-        public UserController(ProjectService projectService, TaskService taskService){
+        public UserController(ProjectService projectService, TaskService taskService)
+        {
             _projectService = projectService;
             _taskService = taskService;
-            _authenticationController  = new AuthenticationController();
+            _authenticationController = new AuthenticationController();
 
         }
 
         public void UserMenu()
-{
-    while (true)
-    {
-        Console.WriteLine("User Dashboard");
-        Console.WriteLine("**********************");
-        
-        Console.WriteLine("1. View Available Projects");
-        Console.WriteLine("2. Select Project");
-        Console.WriteLine("3. View Tasks in Project");
-        Console.WriteLine("4. Accept Task");
-        Console.WriteLine("5. Update Task Status");
-        Console.WriteLine("6. Logout");
-        Console.WriteLine("*************");
-        Console.Write("Enter your choice: ");
-        int choice = int.Parse(Console.ReadLine());
-
-        switch (choice)
         {
-            case 1:
-                ViewAvailableProjects();
-                break;
-            case 2:
-                ViewAvailableProjects();
-                SelectProject();
-                break;
-            case 3:
-                ViewTasksInProject();
-                break;
-            case 4:
-                AcceptTask();
-                break;
-            case 5:
-                UpdateTaskStatus();
-                break;
-            case 6:
-                Console.WriteLine("Exiting user dashboard...");
-                _authenticationController.StartSession();
-                return; // Return from the UserMenu method
-            default:
-                Console.WriteLine("Invalid choice");
-                break;
+            while (true)
+            {
+                Console.WriteLine("User Dashboard");
+                Console.WriteLine("**********************");
+
+                Console.WriteLine("1. View Available Projects");
+                Console.WriteLine("2. Select Project");
+                Console.WriteLine("3. View Tasks in Project");
+                Console.WriteLine("4. Accept Task");
+                Console.WriteLine("5. Update Task Status");
+                Console.WriteLine("6. Logout");
+                Console.WriteLine("*************");
+                Console.Write("Enter your choice: ");
+                int choice = int.Parse(Console.ReadLine());
+
+                switch (choice)
+                {
+                    case 1:
+                        ViewAvailableProjects();
+                        break;
+                    case 2:
+                        ViewAvailableProjects();
+                        SelectProject();
+                        break;
+                    case 3:
+                        ViewTasksInProject();
+                        break;
+                    case 4:
+                        AcceptTask();
+                        break;
+                    case 5:
+                        UpdateTaskStatus();
+                        break;
+                    case 6:
+                        Console.WriteLine("Exiting user dashboard...");
+                        _authenticationController.StartSession();
+                        return; // Return from the UserMenu method
+                    default:
+                        Console.WriteLine("Invalid choice");
+                        break;
+                }
+            }
         }
-    }
-}
 
 
         public void ViewAvailableProjects()
@@ -103,69 +104,69 @@ namespace TaskManagementApp.ConsoleApp
         }
 
         public void ViewTasksInProject()
-{
-    Console.Write("Enter project ID: ");
-    int projectId = int.Parse(Console.ReadLine());
-
-    var project = _projectService.GetProjectById(projectId);
-    if (project != null)
-    {
-        Console.WriteLine($"Tasks in Project '{project.Name}':");
-        foreach (var task in project.Tasks)
         {
-            Console.WriteLine($"{task.Id}. {task.title} (Status: {task.TaskStatus})");
-        }
+            Console.Write("Enter project ID: ");
+            int projectId = int.Parse(Console.ReadLine());
 
-        Console.Write("Enter task ID to view details: ");
-        int taskId = int.Parse(Console.ReadLine());
+            var project = _projectService.GetProjectById(projectId);
+            if (project != null)
+            {
+                Console.WriteLine($"Tasks in Project '{project.Name}':");
+                foreach (var task in project.Tasks)
+                {
+                    Console.WriteLine($"{task.Id}. {task.title} (Status: {task.TaskStatus})");
+                }
 
-        var selectedTask = project.Tasks.FirstOrDefault(task => task.Id == taskId);
-        if (selectedTask != null)
-        {
-            // Here you can display detailed information about the selected task
-            Console.WriteLine($"Selected Task: {selectedTask.title}, Status: {selectedTask.TaskStatus}");
+                Console.Write("Enter task ID to view details: ");
+                int taskId = int.Parse(Console.ReadLine());
+
+                var selectedTask = project.Tasks.FirstOrDefault(task => task.Id == taskId);
+                if (selectedTask != null)
+                {
+                    // Here you can display detailed information about the selected task
+                    Console.WriteLine($"Selected Task: {selectedTask.title}, Status: {selectedTask.TaskStatus}");
+                }
+                else
+                {
+                    Console.WriteLine("Task not found.");
+                }
+            }
+            else
+            {
+                Console.WriteLine("Project not found.");
+            }
         }
-        else
-        {
-            Console.WriteLine("Task not found.");
-        }
-    }
-    else
-    {
-        Console.WriteLine("Project not found.");
-    }
-}
 
 
         public void AcceptTask()
-{
-    Console.Write("Enter task ID to accept: ");
-    int taskId = int.Parse(Console.ReadLine());
-
-    var task = _taskService.GetTaskById(taskId);
-    if (task != null)
-    {
-        var loggedInUser = _authenticationController.GetLoggedInUser();
-        if (loggedInUser != null)
         {
-            task.AssignedUser = loggedInUser;
-            task.TaskStatus = TaskManagementApp.Models.TaskStatus.InProgress;
+            Console.Write("Enter task ID to accept: ");
+            int taskId = int.Parse(Console.ReadLine());
+
+            var task = _taskService.GetTaskById(taskId);
+            if (task != null)
+            {
+                var loggedInUser = _authenticationController.GetLoggedInUser();
+                if (loggedInUser != null)
+                {
+                    task.AssignedUser = loggedInUser;
+                    task.TaskStatus = TaskManagementApp.Models.TaskStatus.InProgress;
 
 
-            _taskService.UpdateTask(task);
+                    _taskService.UpdateTask(task);
 
-            Console.WriteLine($"Task '{task.title}' accepted.");
+                    Console.WriteLine($"Task '{task.title}' accepted.");
+                }
+                else
+                {
+                    // Console.WriteLine("You are not logged in.");
+                }
+            }
+            else
+            {
+                Console.WriteLine("Task not found.");
+            }
         }
-        else
-        {
-            // Console.WriteLine("You are not logged in.");
-        }
-    }
-    else
-    {
-        Console.WriteLine("Task not found.");
-    }
-}
 
 
         public void UpdateTaskStatus()
